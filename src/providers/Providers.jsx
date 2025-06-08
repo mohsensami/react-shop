@@ -1,6 +1,8 @@
 import React, { useEffect } from "react";
 import { getCookie, setCookie } from "../utils/helpers/cookie";
 import useStore from "../store";
+import { RouterProvider } from "react-router-dom";
+import router from "../constants/router";
 
 const Authorize = ({ children }) => {
   const { setState } = useStore();
@@ -17,7 +19,11 @@ const Authorize = ({ children }) => {
 };
 
 const Providers = ({ children }) => {
-  return <Authorize>{children}</Authorize>;
+  return (
+    <RouterProvider router={router}>
+      <Authorize>{children}</Authorize>
+    </RouterProvider>
+  );
 };
 
 export default Providers;
