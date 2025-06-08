@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { getCookie, setCookie } from "../utils/helpers/cookie";
 import useStore from "../store";
 import { RouterProvider } from "react-router-dom";
