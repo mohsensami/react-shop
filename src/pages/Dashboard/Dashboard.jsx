@@ -17,7 +17,7 @@ import DashboardSkeleton from "../../components/skeleton/DashboardSkeleton";
 import ErrorOnFetchApi from "../../components/common/ErrorOnFetchApi";
 import { removeCookie } from "../../utils/helpers/cookie";
 import LogoutIcon from "@mui/icons-material/Logout";
-// import Header from "../../components/common/Header";
+import Header from "../../components/common/Header";
 
 const Dashboard = () => {
   const { access_token, removeState } = useStore();
@@ -40,7 +40,7 @@ const Dashboard = () => {
 
   return (
     <div>
-      {/* <Header /> */}
+      <Header />
       {access_token != null && access_token != undefined ? (
         <>
           {isPending && <DashboardSkeleton />}
