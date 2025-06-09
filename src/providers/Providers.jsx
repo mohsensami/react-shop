@@ -2,6 +2,9 @@ import { useEffect } from "react";
 import { getCookie, setCookie } from "../utils/helpers/cookie";
 import useStore from "../store";
 import { ToastContainer } from "react-toastify";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 const Authorize = ({ children }) => {
   const { setState } = useStore();
@@ -19,10 +22,12 @@ const Authorize = ({ children }) => {
 
 const Providers = ({ children }) => {
   return (
-    <Authorize>
-      {children}
-      <ToastContainer />
-    </Authorize>
+    <QueryClientProvider client={queryClient}>
+      <Authorize>
+        {children}
+        <ToastContainer />
+      </Authorize>
+    </QueryClientProvider>
   );
 };
 
