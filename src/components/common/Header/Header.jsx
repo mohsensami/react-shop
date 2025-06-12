@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import StorefrontIcon from "@mui/icons-material/Storefront";
 import LoginIcon from "@mui/icons-material/Login";
 import PermIdentityIcon from "@mui/icons-material/PermIdentity";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 
 const Header = () => {
   const { access_token } = useStore();
@@ -15,26 +16,35 @@ const Header = () => {
           <span>react ecommerce</span>
           <StorefrontIcon />
         </Link>
-        <Link
-          to={`/${
-            access_token != null && access_token != undefined
-              ? "dashboard"
-              : "login"
-          }`}
-          className="capitalize bg-slate-500 px-4 py-2 rounded-md flex items-center gap-2"
-        >
-          {access_token != null && access_token != undefined ? (
-            <>
-              <span>dashboard</span>
-              <PermIdentityIcon />
-            </>
-          ) : (
-            <>
-              <span>login/signup</span>
-              <LoginIcon />
-            </>
-          )}
-        </Link>
+        <div className="flex items-center gap-4">
+          <Link
+            to="/basket"
+            className="capitalize bg-slate-500 px-4 py-2 rounded-md flex items-center gap-2"
+          >
+            <span>basket</span>
+            <ShoppingCartIcon />
+          </Link>
+          <Link
+            to={`/${
+              access_token != null && access_token != undefined
+                ? "dashboard"
+                : "login"
+            }`}
+            className="capitalize bg-slate-500 px-4 py-2 rounded-md flex items-center gap-2"
+          >
+            {access_token != null && access_token != undefined ? (
+              <>
+                <span>dashboard</span>
+                <PermIdentityIcon />
+              </>
+            ) : (
+              <>
+                <span>login/signup</span>
+                <LoginIcon />
+              </>
+            )}
+          </Link>
+        </div>
       </div>
     </header>
   );
