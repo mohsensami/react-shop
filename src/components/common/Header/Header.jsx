@@ -18,10 +18,10 @@ const Header = () => {
         </Link>
         <div className="flex items-center gap-4">
           <Link
-            to="/basket"
+            to="/cart"
             className="capitalize bg-slate-500 px-4 py-2 rounded-md flex items-center gap-2"
           >
-            <span>basket</span>
+            <span>cart</span>
             <ShoppingCartIcon />
           </Link>
           <Link
