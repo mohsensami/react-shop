@@ -3,6 +3,7 @@ import { getCookie, setCookie } from "../utils/helpers/cookie";
 import useStore from "../store";
 import { ToastContainer } from "react-toastify";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import Footer from "../components/common/Footer/Footer";
 
 const queryClient = new QueryClient();
 
@@ -26,6 +27,7 @@ const Providers = ({ children }) => {
       <Authorize>
         {children}
         <ToastContainer />
+        <Footer />
       </Authorize>
     </QueryClientProvider>
   );
