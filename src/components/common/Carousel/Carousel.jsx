@@ -29,7 +29,7 @@ const Carousel = () => {
       data-carousel="static"
     >
       {/* Carousel wrapper */}
-      <div className="relative h-56 overflow-hidden rounded-lg md:h-96">
+      <div className="relative h-56 overflow-hidden md:h-96">
         {/* Item 1 */}
         <div
           className={`absolute w-full h-full transition-opacity duration-700 ease-in-out ${

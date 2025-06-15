@@ -9,7 +9,9 @@ const Root = () => {
     <div>
       <Header />
       <CategoriesChips />
-      <Carousel />
+      <div className="mt-4">
+        <Carousel />
+      </div>
 
       <ProductsGridWithPagination />
     </div>
