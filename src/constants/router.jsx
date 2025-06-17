@@ -7,6 +7,7 @@ import Products from "../pages/Products/Products";
 import Root from "../pages/Root";
 import Card from "../pages/Card";
 import Contact from "../pages/Contact/Contact";
+import Faq from "../pages/FAQ";
 
 const router = createBrowserRouter([
   {
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
   {
     path: "/contact",
     element: <Contact />,
+  },
+  {
+    path: "/faq",
+    element: <Faq />,
   },
 ]);
 
