@@ -6,6 +6,7 @@ import Categories from "../pages/Categories/Categories";
 import Products from "../pages/Products/Products";
 import Root from "../pages/Root";
 import Card from "../pages/Card";
+import Contact from "../pages/Contact/Contact";
 
 const router = createBrowserRouter([
   {
@@ -35,6 +36,10 @@ const router = createBrowserRouter([
   {
     path: "/cart",
     element: <Card />,
+  },
+  {
+    path: "/contact",
+    element: <Contact />,
   },
 ]);
 

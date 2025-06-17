@@ -3,6 +3,7 @@ import Header from "../../components/common/Header/Header";
 import CategoriesChips from "../../components/common/CategoriesChips";
 import ProductsGridWithPagination from "../../components/common/ProductsGridWithPagination";
 import Carousel from "../../components/common/Carousel";
+import Footer from "../../components/common/Footer/Footer";
 
 const Root = () => {
   return (
@@ -14,6 +15,7 @@ const Root = () => {
       </div>
 
       <ProductsGridWithPagination />
+      <Footer />
     </div>
   );
 };

@@ -27,7 +27,6 @@ const Providers = ({ children }) => {
       <Authorize>
         {children}
         <ToastContainer />
-        <Footer />
       </Authorize>
     </QueryClientProvider>
   );

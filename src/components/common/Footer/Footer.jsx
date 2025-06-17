@@ -1,4 +1,5 @@
 import StorefrontIcon from "@mui/icons-material/Storefront";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
@@ -36,9 +37,9 @@ const Footer = () => {
               </a>
             </li>
             <li>
-              <a href="#" className="hover:underline">
+              <Link to="/contact" key="ad" className="hover:underline">
                 Contact
-              </a>
+              </Link>
             </li>
           </ul>
         </div>
