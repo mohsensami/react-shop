@@ -1,3 +1,5 @@
+import { create } from "zustand";
+
 const useCartStore = create((set, get) => ({
   cartItems: [],
 
@@ -9,15 +11,9 @@ const useCartStore = create((set, get) => ({
     if (existingItemIndex !== -1) {
       const updatedCart = [...get().cartItems];
       updatedCart[existingItemIndex] = {
-        id: product.id,
-        title: product.title,
-        price: product.price,
-        image: Array.isArray(product.images)
-          ? product.images[0]
-          : product.images,
-        quantity: quantity,
+        ...updatedCart[existingItemIndex],
+        quantity,
       };
-
       set({ cartItems: updatedCart });
     } else {
       set({
@@ -30,7 +26,7 @@ const useCartStore = create((set, get) => ({
             image: Array.isArray(product.images)
               ? product.images[0]
               : product.images,
-            quantity: quantity,
+            quantity,
           },
         ],
       });
@@ -53,3 +49,5 @@ const useCartStore = create((set, get) => ({
     set({ cartItems: [] });
   },
 }));
+
+export default useCartStore;

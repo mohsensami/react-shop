@@ -5,7 +5,7 @@ import Dashboard from "../pages/Dashboard/Dashboard";
 import Categories from "../pages/Categories/Categories";
 import Products from "../pages/Products/Products";
 import Root from "../pages/Root";
-import Card from "../pages/Card";
+import Cart from "../pages/Cart";
 import Contact from "../pages/Contact/Contact";
 import Faq from "../pages/FAQ";
 import About from "../pages/About/About";
@@ -37,7 +37,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/cart",
-    element: <Card />,
+    element: <Cart />,
   },
   {
     path: "/contact",
