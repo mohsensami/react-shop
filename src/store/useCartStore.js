@@ -10,13 +10,21 @@ const useCartStore = create((set, get) => ({
     );
 
     if (existingItemIndex !== -1) {
-      // اگر محصول از قبل در سبد خرید هست، فقط quantity آپدیت میشه
+      // اگر محصول از قبل در سبد خرید هست → مقدار جدید جایگزین کن
       const updatedCart = [...get().cartItems];
-      updatedCart[existingItemIndex].quantity += quantity;
+      updatedCart[existingItemIndex] = {
+        id: product.id,
+        title: product.title,
+        price: product.price,
+        image: Array.isArray(product.images)
+          ? product.images[0]
+          : product.images,
+        quantity: quantity,
+      };
 
       set({ cartItems: updatedCart });
     } else {
-      // اگر محصول جدید هست اضافه میشه
+      // محصول جدید → اضافه کن
       set({
         cartItems: [
           ...get().cartItems,
@@ -34,7 +42,14 @@ const useCartStore = create((set, get) => ({
     }
   },
 
-  // میتونی سایر متدها هم اضافه کنی مثل removeFromCart, clearCart ...
+  removeFromCart: (productId) => {
+    const updatedCart = get().cartItems.filter((item) => item.id !== productId);
+    set({ cartItems: updatedCart });
+  },
+
+  clearCart: () => {
+    set({ cartItems: [] });
+  },
 }));
 
 export default useCartStore;
