@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import getProductById from "../../utils/apis/products/getProductById";
@@ -18,6 +18,7 @@ const Products = () => {
   });
 
   const addToCart = useCartStore((state) => state.addToCart);
+  const cartItems = useCartStore((state) => state.cartItems); // اینو اضافه کن برای لاگ گرفتن
 
   const handleIncrement = () => {
     setQuantity((prev) => prev + 1);
@@ -32,8 +33,11 @@ const Products = () => {
   const handleAddToCart = () => {
     if (!data?.data) return;
     addToCart(data.data, quantity);
-    console.log(`Added ${quantity} of ${data.data.title} to cart`);
   };
+
+  useEffect(() => {
+    console.log("Cart Items:", cartItems); // اینجا لاگ می‌گیری
+  }, [cartItems]);
 
   return (
     <>
