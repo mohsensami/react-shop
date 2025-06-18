@@ -8,7 +8,7 @@ import Pagination from "@mui/material/Pagination";
 
 const ProductsGridWithPagination = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const limit = 6;
+  const limit = 12;
   const total = 200; //backend in reponse should provide total page , total items and ...
   const { isPending, error, data } = useQuery({
     queryKey: ["products", currentPage],

@@ -13,8 +13,8 @@ const Header = () => {
     <header className="px-4 my-4">
       <div className="flex justify-between items-center bg-slate-700 p-4 text-slate-50 rounded-lg shadow-md">
         <Link to="/" className="capitalize flex gap-1 items-center">
-          <span>react ecommerce</span>
           <StorefrontIcon />
+          <span>Shop</span>
         </Link>
         <div className="flex items-center gap-4">
           <Link
