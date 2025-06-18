@@ -1,6 +1,3 @@
-// src/store/useCartStore.js
-import { create } from "zustand";
-
 const useCartStore = create((set, get) => ({
   cartItems: [],
 
@@ -10,7 +7,6 @@ const useCartStore = create((set, get) => ({
     );
 
     if (existingItemIndex !== -1) {
-      // اگر محصول از قبل در سبد خرید هست → مقدار جدید جایگزین کن
       const updatedCart = [...get().cartItems];
       updatedCart[existingItemIndex] = {
         id: product.id,
@@ -24,7 +20,6 @@ const useCartStore = create((set, get) => ({
 
       set({ cartItems: updatedCart });
     } else {
-      // محصول جدید → اضافه کن
       set({
         cartItems: [
           ...get().cartItems,
@@ -42,6 +37,13 @@ const useCartStore = create((set, get) => ({
     }
   },
 
+  updateQuantity: (productId, quantity) => {
+    const updatedCart = get().cartItems.map((item) =>
+      item.id === productId ? { ...item, quantity } : item
+    );
+    set({ cartItems: updatedCart });
+  },
+
   removeFromCart: (productId) => {
     const updatedCart = get().cartItems.filter((item) => item.id !== productId);
     set({ cartItems: updatedCart });
@@ -51,5 +53,3 @@ const useCartStore = create((set, get) => ({
     set({ cartItems: [] });
   },
 }));
-
-export default useCartStore;
