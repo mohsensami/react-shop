@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import getProductById from "../../utils/apis/products/getProductById";
 import Header from "../../components/common/Header";
+import Footer from "../../components/common/Footer";
 import ProductSkeleton from "../../components/skeleton/ProductSkeleton/ProductSkeleton";
 import ErrorOnFetchApi from "../../components/common/ErrorOnFetchApi";
 import useCartStore from "../../store/useCartStore";
@@ -133,6 +134,7 @@ const Products = () => {
           </div>
         )}
       </div>
+      <Footer />
     </>
   );
 };
