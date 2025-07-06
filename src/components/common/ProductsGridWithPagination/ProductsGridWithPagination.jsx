@@ -8,11 +8,12 @@ import Pagination from "@mui/material/Pagination";
 
 const ProductsGridWithPagination = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const limit = 12;
-  const total = 200; //backend in reponse should provide total page , total items and ...
+  const limit = 20;
+  const total = 20; //backend in reponse should provide total page , total items and ...
   const { isPending, error, data } = useQuery({
     queryKey: ["products", currentPage],
-    queryFn: () => getProductsApi((currentPage - 1) * limit, limit),
+    queryFn: () => getProductsApi(),
+    // queryFn: () => getProductsApi((currentPage - 1) * limit, total),
   });
 
   return (
@@ -29,13 +30,13 @@ const ProductsGridWithPagination = () => {
           >
             <img
               src={product?.images[0].replace(/^["[]+|["\]]/g, "")}
-              className="w-[100%] rounded-t-xl h-[15rem]"
+              className="rounded-t-xl h-[15rem]"
             />
             <p>{product?.title}</p>
             <p>{product?.price}$</p>
           </Link>
         ))}
-      {data && (
+      {/* {data && (
         <div className="my-8">
           <Pagination
             onChange={(event, value) => {
@@ -47,7 +48,7 @@ const ProductsGridWithPagination = () => {
             boundaryCount={2}
           />
         </div>
-      )}
+      )} */}
     </div>
   );
 };

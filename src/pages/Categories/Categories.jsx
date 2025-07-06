@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import getCategoryByIdApi from "../../utils/apis/categories/getCategoryByIdApi";
 import Header from "../../components/common/Header";
+import Footer from "../../components/common/Footer";
 import CategoryInfoSkeleton from "../../components/skeleton/CategoryInfoSkeleton";
 import ErrorOnFetchApi from "../../components/common/ErrorOnFetchApi";
 import ProductsByCategoryGrid from "../../components/common/ProductsByCategoryGrid";
@@ -33,6 +34,7 @@ const Categories = () => {
         )}
       </div>
       {data && <ProductsByCategoryGrid id={id} />}
+      <Footer />
     </>
   );
 };

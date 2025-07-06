@@ -25,7 +25,7 @@ const ProductsByCategoryGrid = ({ id }) => {
           >
             <img
               src={product?.images[0].replace(/^["[]+|["\]]/g, "")}
-              className="w-[100%] rounded-t-xl h-[15rem]"
+              className=" rounded-t-xl h-[15rem]"
             />
             <p>{product?.title}</p>
             <p>{product?.price}$</p>
