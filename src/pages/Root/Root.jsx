@@ -7,13 +7,12 @@ import Footer from "../../components/common/Footer/Footer";
 
 const Root = () => {
   return (
-    <div>
+    <div className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-white">
       <Header />
       <CategoriesChips />
-      <div className="mt-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 mb-12">
         <Carousel />
       </div>
-
       <ProductsGridWithPagination />
       <Footer />
     </div>
