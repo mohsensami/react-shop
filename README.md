@@ -20,6 +20,9 @@ A modern e-commerce web application built with React and Vite, offering a fast a
 ## 📦 Installation
 
 1. Clone the repository:
+
 ```bash
 git clone [your-repository-url]
 ```
+
+.
