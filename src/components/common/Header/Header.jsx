@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import useStore from "../../../store";
 import { Link } from "react-router-dom";
 import StorefrontIcon from "@mui/icons-material/Storefront";
@@ -6,9 +6,11 @@ import LoginIcon from "@mui/icons-material/Login";
 import PermIdentityIcon from "@mui/icons-material/PermIdentity";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import useCartStore from "../../../store/useCartStore";
+import CartDrawer from "../CartDrawer";
 
 const Header = () => {
   const { access_token } = useStore();
+  const [isCartDrawerOpen, setIsCartDrawerOpen] = useState(false);
 
   const cartItems = useCartStore((state) => state.cartItems);
 
@@ -33,8 +35,8 @@ const Header = () => {
 
           {/* Navigation */}
           <nav className="flex items-center gap-3">
-            <Link
-              to="/cart"
+            <button
+              onClick={() => setIsCartDrawerOpen(true)}
               className="relative group flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-gray-50 to-gray-100 hover:from-blue-50 hover:to-blue-100 text-gray-700 hover:text-blue-700 font-medium transition-all duration-300 shadow-sm hover:shadow-md"
             >
               <ShoppingCartIcon className="text-xl" />
@@ -44,7 +46,7 @@ const Header = () => {
                   {totalItems}
                 </span>
               )}
-            </Link>
+            </button>
             <Link
               to={`/${
                 access_token != null && access_token != undefined
@@ -68,6 +70,10 @@ const Header = () => {
           </nav>
         </div>
       </div>
+      <CartDrawer
+        isOpen={isCartDrawerOpen}
+        onClose={() => setIsCartDrawerOpen(false)}
+      />
     </header>
   );
 };
