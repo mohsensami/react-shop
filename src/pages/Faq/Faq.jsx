@@ -1,14 +1,4 @@
-import React from "react";
-import {
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  Typography,
-  Container,
-  Grid,
-  Box,
-} from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import React, { useState } from "react";
 import Footer from "../../components/common/Footer/Footer";
 import Header from "../../components/common/Header";
 
@@ -16,116 +6,121 @@ const faqData = [
   {
     question: "What is your return policy?",
     answer:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex, sit amet blandit leo lobortis eget. We offer a 30-day return policy for all products in their original condition.",
+      "We offer a 30-day return policy for all products in their original condition. Items must be unused, unwashed, and with all tags attached. Please contact our customer service team to initiate a return.",
   },
   {
     question: "How do I track my order?",
     answer:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex, sit amet blandit leo lobortis eget. You can track your order through your account dashboard or using the tracking number provided in your shipping confirmation email.",
+      "You can track your order through your account dashboard or using the tracking number provided in your shipping confirmation email. Once your order ships, you'll receive an email with tracking information.",
   },
   {
     question: "What payment methods do you accept?",
     answer:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex, sit amet blandit leo lobortis eget. We accept all major credit cards, PayPal, and bank transfers.",
+      "We accept all major credit cards (Visa, Mastercard, American Express), PayPal, and bank transfers. All transactions are secure and encrypted for your protection.",
   },
   {
     question: "How long does shipping take?",
     answer:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex, sit amet blandit leo lobortis eget. Standard shipping takes 3-5 business days, while express shipping takes 1-2 business days.",
+      "Standard shipping takes 3-5 business days, while express shipping takes 1-2 business days. Shipping times may vary during peak seasons or holidays.",
   },
   {
     question: "Do you ship internationally?",
     answer:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex, sit amet blandit leo lobortis eget. Yes, we ship to most countries worldwide. Shipping times and costs vary by location.",
+      "Yes, we ship to most countries worldwide. Shipping times and costs vary by location. Please check our shipping page for more details on international shipping rates.",
   },
   {
     question: "How can I contact customer support?",
     answer:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex, sit amet blandit leo lobortis eget. You can reach our customer support team through email, phone, or live chat during business hours.",
+      "You can reach our customer support team through email at support@example.com, phone at +1 (555) 123-4567, or live chat during business hours (Monday-Friday, 9 AM - 6 PM EST).",
   },
 ];
 
 const Faq = () => {
+  const [openIndex, setOpenIndex] = useState(null);
+
+  const toggleFaq = (index) => {
+    setOpenIndex(openIndex === index ? null : index);
+  };
+
   return (
-    <>
+    <div className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-white">
       <Header />
-      <Container maxWidth="lg" sx={{ py: 8 }}>
-        <Typography
-          variant="h2"
-          component="h1"
-          align="center"
-          gutterBottom
-          sx={{ mb: 6, fontWeight: "bold" }}
-        >
-          Frequently Asked Questions
-        </Typography>
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={6}>
-            {faqData.slice(0, 3).map((faq, index) => (
-              <Accordion
-                key={index}
-                sx={{
-                  mb: 2,
-                  boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-                  "&:before": {
-                    display: "none",
-                  },
-                }}
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        {/* Hero Section */}
+        <div className="text-center mb-16">
+          <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+            Frequently Asked Questions
+          </h1>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            Find answers to common questions about our products, shipping, and
+            services.
+          </p>
+        </div>
+
+        {/* FAQ Items */}
+        <div className="space-y-4">
+          {faqData.map((faq, index) => (
+            <div
+              key={index}
+              className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-xl"
+            >
+              <button
+                onClick={() => toggleFaq(index)}
+                className="w-full px-6 py-5 text-left flex items-center justify-between focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-inset"
               >
-                <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
-                  sx={{
-                    backgroundColor: "#f5f5f5",
-                    "&:hover": {
-                      backgroundColor: "#eeeeee",
-                    },
-                  }}
+                <span className="text-lg font-semibold text-gray-900 pr-4">
+                  {faq.question}
+                </span>
+                <svg
+                  className={`w-6 h-6 text-blue-600 transition-transform duration-300 flex-shrink-0 ${
+                    openIndex === index ? "rotate-180" : ""
+                  }`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
                 >
-                  <Typography variant="h6" component="div">
-                    {faq.question}
-                  </Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Typography>{faq.answer}</Typography>
-                </AccordionDetails>
-              </Accordion>
-            ))}
-          </Grid>
-          <Grid item xs={12} md={6}>
-            {faqData.slice(3).map((faq, index) => (
-              <Accordion
-                key={index}
-                sx={{
-                  mb: 2,
-                  boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-                  "&:before": {
-                    display: "none",
-                  },
-                }}
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </button>
+              <div
+                className={`overflow-hidden transition-all duration-300 ${
+                  openIndex === index ? "max-h-96" : "max-h-0"
+                }`}
               >
-                <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
-                  sx={{
-                    backgroundColor: "#f5f5f5",
-                    "&:hover": {
-                      backgroundColor: "#eeeeee",
-                    },
-                  }}
-                >
-                  <Typography variant="h6" component="div">
-                    {faq.question}
-                  </Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Typography>{faq.answer}</Typography>
-                </AccordionDetails>
-              </Accordion>
-            ))}
-          </Grid>
-        </Grid>
-      </Container>
+                <div className="px-6 pb-5 pt-0">
+                  <p className="text-gray-600 leading-relaxed pt-4 border-t border-gray-100">
+                    {faq.answer}
+                  </p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Additional Help Section */}
+        <div className="mt-16 bg-gradient-to-br from-blue-50 to-purple-50 rounded-3xl p-8 text-center border border-blue-100">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">
+            Still have questions?
+          </h2>
+          <p className="text-gray-600 mb-6">
+            Can't find the answer you're looking for? Please reach out to our
+            friendly team.
+          </p>
+          <a
+            href="/contact"
+            className="inline-block bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-3 px-8 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+          >
+            Contact Us
+          </a>
+        </div>
+      </div>
       <Footer />
-    </>
+    </div>
   );
 };
 

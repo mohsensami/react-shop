@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import useStore from "../../../store";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import StorefrontIcon from "@mui/icons-material/Storefront";
 import LoginIcon from "@mui/icons-material/Login";
 import PermIdentityIcon from "@mui/icons-material/PermIdentity";
@@ -11,10 +11,27 @@ import CartDrawer from "../CartDrawer";
 const Header = () => {
   const { access_token } = useStore();
   const [isCartDrawerOpen, setIsCartDrawerOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const location = useLocation();
 
   const cartItems = useCartStore((state) => state.cartItems);
 
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+
+  const navLinks = [
+    { path: "/", label: "Home" },
+    { path: "/about", label: "About US" },
+    { path: "/contact", label: "Contact US" },
+    { path: "/shop", label: "Shop" },
+    { path: "/faq", label: "FAQ" },
+  ];
+
+  const isActive = (path) => {
+    if (path === "/") {
+      return location.pathname === "/";
+    }
+    return location.pathname.startsWith(path);
+  };
 
   return (
     <header className="sticky top-0 z-50 bg-white shadow-lg border-b border-gray-200">
@@ -33,7 +50,57 @@ const Header = () => {
             </span>
           </Link>
 
-          {/* Navigation */}
+          {/* Navigation Links - Center */}
+          <nav className="hidden md:flex items-center gap-1">
+            {navLinks.map((link) => (
+              <Link
+                key={link.path}
+                to={link.path}
+                className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 relative group ${
+                  isActive(link.path)
+                    ? "text-blue-600 bg-blue-50"
+                    : "text-gray-700 hover:text-blue-600 hover:bg-gray-50"
+                }`}
+              >
+                <span className="relative z-10">{link.label}</span>
+                {isActive(link.path) && (
+                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 rounded-full"></span>
+                )}
+              </Link>
+            ))}
+          </nav>
+
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="md:hidden p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
+            aria-label="Toggle menu"
+          >
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              {isMobileMenuOpen ? (
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              ) : (
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              )}
+            </svg>
+          </button>
+
+          {/* Right Side Actions */}
           <nav className="flex items-center gap-3">
             <button
               onClick={() => setIsCartDrawerOpen(true)}
@@ -69,6 +136,28 @@ const Header = () => {
             </Link>
           </nav>
         </div>
+
+        {/* Mobile Menu */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden border-t border-gray-200 py-4">
+            <nav className="flex flex-col gap-2">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className={`px-4 py-3 rounded-lg font-medium transition-all duration-300 ${
+                    isActive(link.path)
+                      ? "text-blue-600 bg-blue-50"
+                      : "text-gray-700 hover:text-blue-600 hover:bg-gray-50"
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
+          </div>
+        )}
       </div>
       <CartDrawer
         isOpen={isCartDrawerOpen}
