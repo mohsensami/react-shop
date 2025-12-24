@@ -51,44 +51,105 @@ const LoginForm = () => {
   return (
     <form
       onSubmit={handleSubmit(async (data) => await handleLogin(data))}
-      className="border-2 rounded-xl shadow-md p-4  lg:w-[30%] w-[80%]"
+      className="bg-white rounded-3xl shadow-2xl p-8 border border-gray-100"
     >
-      <fieldset disabled={isSubmitting} className="flex flex-col gap-4">
-        <input
-          {...register("email")}
-          className={`${
-            errors?.email?.message ? "border-red-400" : "border-slate-400"
-          } w-[100%] py-2 px-4 border-2 focus:border-slate-600 rounded-md`}
-          type="text"
-          name="email"
-          id="email"
-          placeholder="Enter email"
-        />
-        {errors?.email?.message && (
-          <p className="text-red-600">{errors.email.message}</p>
-        )}
-        <input
-          {...register("password")}
-          className={`${
-            errors?.password?.message ? "border-red-400" : "border-slate-400"
-          } w-[100%] py-2 px-4 border-2 focus:border-slate-600 rounded-md`}
-          type="password"
-          name="password"
-          id="password"
-          placeholder="Enter password"
-        />
-        {errors?.password?.message && (
-          <p className="text-red-600">{errors.password.message}</p>
-        )}
+      <fieldset disabled={isSubmitting} className="flex flex-col gap-6">
+        <div className="flex flex-col gap-2">
+          <label
+            htmlFor="email"
+            className="text-gray-700 font-semibold text-sm"
+          >
+            Email Address
+          </label>
+          <input
+            {...register("email")}
+            className={`${
+              errors?.email?.message
+                ? "border-red-400 focus:border-red-500 focus:ring-red-200"
+                : "border-gray-300 focus:border-blue-500 focus:ring-blue-200"
+            } w-full py-3 px-4 border-2 rounded-xl transition-all duration-200 focus:outline-none focus:ring-4 text-gray-900 placeholder-gray-400`}
+            type="text"
+            name="email"
+            id="email"
+            placeholder="Enter your email"
+          />
+          {errors?.email?.message && (
+            <p className="text-red-600 text-sm font-medium mt-1">
+              {errors.email.message}
+            </p>
+          )}
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <label
+            htmlFor="password"
+            className="text-gray-700 font-semibold text-sm"
+          >
+            Password
+          </label>
+          <input
+            {...register("password")}
+            className={`${
+              errors?.password?.message
+                ? "border-red-400 focus:border-red-500 focus:ring-red-200"
+                : "border-gray-300 focus:border-blue-500 focus:ring-blue-200"
+            } w-full py-3 px-4 border-2 rounded-xl transition-all duration-200 focus:outline-none focus:ring-4 text-gray-900 placeholder-gray-400`}
+            type="password"
+            name="password"
+            id="password"
+            placeholder="Enter your password"
+          />
+          {errors?.password?.message && (
+            <p className="text-red-600 text-sm font-medium mt-1">
+              {errors.password.message}
+            </p>
+          )}
+        </div>
+
         <button
-          className="w-[100%] bg-slate-600 text-slate-50 rounded-md py-2 px-4"
+          className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-xl py-3.5 px-6 font-semibold text-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
           type="submit"
         >
-          {isSubmitting ? "Logginig..." : "Login"}
+          {isSubmitting ? (
+            <span className="flex items-center justify-center gap-2">
+              <svg
+                className="animate-spin h-5 w-5 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+              Logging in...
+            </span>
+          ) : (
+            "Sign In"
+          )}
         </button>
-        <Link className="text-center underline text-xs" to="/signup">
-          dont have a account? signup{" "}
-        </Link>
+
+        <div className="text-center pt-2">
+          <p className="text-gray-600 text-sm">
+            Don't have an account?{" "}
+            <Link
+              to="/signup"
+              className="text-blue-600 hover:text-blue-700 font-semibold underline decoration-2 underline-offset-2 transition-colors duration-200"
+            >
+              Sign up
+            </Link>
+          </p>
+        </div>
       </fieldset>
     </form>
   );
