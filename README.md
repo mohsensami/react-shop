@@ -24,5 +24,4 @@ A modern e-commerce web application built with React and Vite, offering a fast a
 ```bash
 git clone [your-repository-url]
 ```
-
 .
