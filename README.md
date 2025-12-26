@@ -12,7 +12,7 @@ A modern e-commerce web application built with React and Vite, offering a fast a
 
 ## 🛠️ Technologies
 
-- React 18
+- React 19
 - Vite
 - ESLint
 - SWC/Babel for Fast Refresh
@@ -24,4 +24,5 @@ A modern e-commerce web application built with React and Vite, offering a fast a
 ```bash
 git clone [your-repository-url]
 ```
+
 .
