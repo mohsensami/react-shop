@@ -28,7 +28,7 @@ const productSchema = z.object({
     .min(1, "At least one image URL is required"),
 });
 
-const AddProductForm = () => {
+const AddProductForm = ({ onSuccess }) => {
   const queryClient = useQueryClient();
 
   // Fetch categories for the dropdown
@@ -63,6 +63,10 @@ const AddProductForm = () => {
         setValue("images", [""]);
         // Invalidate products queries to refetch the list
         queryClient.invalidateQueries({ queryKey: ["products"] });
+        // Call onSuccess callback if provided
+        if (onSuccess) {
+          onSuccess();
+        }
       } else {
         toast.error("Failed to create product. Please try again.");
       }
