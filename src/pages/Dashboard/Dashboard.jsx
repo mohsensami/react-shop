@@ -16,6 +16,7 @@ import AddIcon from "@mui/icons-material/Add";
 import Header from "../../components/common/Header";
 import Avatar from "@mui/material/Avatar";
 import { Box, Card, CardContent } from "@mui/material";
+import Pagination from "@mui/material/Pagination";
 import AddProductForm from "./AddProductForm";
 import getProductsApi from "../../utils/apis/products/getProductsApi";
 import ProductGridSkeleton from "../../components/skeleton/ProductGridSkeleton";
@@ -25,6 +26,8 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const [activeView, setActiveView] = useState("profile"); // 'profile' or 'products'
   const [showAddForm, setShowAddForm] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const limit = 10;
 
   const { isPending, error, data } = useQuery({
     queryKey: ["userIno"],
@@ -32,19 +35,43 @@ const Dashboard = () => {
     enabled: access_token != null && access_token != undefined,
   });
 
-  // Fetch all products for the table
+  // Fetch products for the table with pagination
   const {
     data: productsData,
     isPending: productsLoading,
     error: productsError,
   } = useQuery({
-    queryKey: ["products", "all"],
-    queryFn: () => getProductsApi(0, -1),
+    queryKey: ["products", "dashboard", currentPage],
+    queryFn: () => {
+      const offset = (currentPage - 1) * limit;
+      return getProductsApi(offset, limit);
+    },
     enabled: activeView === "products" && !showAddForm,
   });
 
   // Get products array - handle both response structures
   const products = productsData?.data?.products || productsData?.data || [];
+
+  // Calculate total pages
+  const totalItems = productsData?.data?.total;
+  let totalPages = 1;
+
+  if (totalItems) {
+    totalPages = Math.ceil(totalItems / limit);
+  } else {
+    // If we got a full page, assume there might be more
+    if (products.length === limit) {
+      totalPages = currentPage + 1;
+    } else if (products.length > 0) {
+      totalPages = currentPage;
+    }
+  }
+
+  const handlePageChange = (event, value) => {
+    setCurrentPage(value);
+    // Scroll to top of table
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   const handleLogout = () => {
     removeCookie("credential");
@@ -56,6 +83,7 @@ const Dashboard = () => {
   const handleProductsClick = () => {
     setActiveView("products");
     setShowAddForm(false);
+    setCurrentPage(1); // Reset to first page
   };
 
   const handleAddProductClick = () => {
@@ -279,7 +307,10 @@ const Dashboard = () => {
                             <span>← Back to Products</span>
                           </button>
                           <AddProductForm
-                            onSuccess={() => setShowAddForm(false)}
+                            onSuccess={() => {
+                              setShowAddForm(false);
+                              setCurrentPage(1); // Reset to first page after adding product
+                            }}
                           />
                         </div>
                       ) : (
@@ -365,7 +396,9 @@ const Dashboard = () => {
                                               <img
                                                 className="h-16 w-16 rounded-lg object-cover border border-gray-200"
                                                 src={productImage}
-                                                alt={product?.title || "Product"}
+                                                alt={
+                                                  product?.title || "Product"
+                                                }
                                                 onError={(e) => {
                                                   e.target.src =
                                                     "https://via.placeholder.com/150";
@@ -380,7 +413,9 @@ const Dashboard = () => {
                                           </td>
                                           <td className="px-6 py-4 whitespace-nowrap">
                                             <div className="text-sm font-bold text-green-600">
-                                              ${product?.price?.toFixed(2) || "0.00"}
+                                              $
+                                              {product?.price?.toFixed(2) ||
+                                                "0.00"}
                                             </div>
                                           </td>
                                           <td className="px-6 py-4 whitespace-nowrap">
@@ -400,6 +435,36 @@ const Dashboard = () => {
                                     })}
                                   </tbody>
                                 </table>
+                              </div>
+                            )}
+                            {/* Pagination */}
+                            {products.length > 0 && totalPages > 1 && (
+                              <div className="flex justify-center items-center py-6 px-6 border-t border-gray-200">
+                                <Pagination
+                                  count={totalPages}
+                                  page={currentPage}
+                                  onChange={handlePageChange}
+                                  color="primary"
+                                  size="large"
+                                  showFirstButton
+                                  showLastButton
+                                  sx={{
+                                    "& .MuiPaginationItem-root": {
+                                      fontSize: "1rem",
+                                      fontWeight: 600,
+                                    },
+                                  }}
+                                />
+                              </div>
+                            )}
+                            {/* Products count info */}
+                            {products.length > 0 && (
+                              <div className="px-6 py-4 bg-gray-50 border-t border-gray-200">
+                                <p className="text-sm text-gray-600 text-center">
+                                  Showing {products.length} product
+                                  {products.length !== 1 ? "s" : ""} on page{" "}
+                                  {currentPage} of {totalPages}
+                                </p>
                               </div>
                             )}
                           </CardContent>
