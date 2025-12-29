@@ -5,3 +5,41 @@
     font-size: 0.6rem;
   }
 }
+
+/* Swiper Custom Styles */
+.related-products-swiper .swiper-button-next,
+.related-products-swiper .swiper-button-prev {
+  color: #2563eb;
+  background: white;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+}
+
+.related-products-swiper .swiper-button-next:hover,
+.related-products-swiper .swiper-button-prev:hover {
+  background: #2563eb;
+  color: white;
+  transform: scale(1.1);
+}
+
+.related-products-swiper .swiper-button-next::after,
+.related-products-swiper .swiper-button-prev::after {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.related-products-swiper .swiper-pagination-bullet {
+  background: #2563eb;
+  opacity: 0.5;
+  width: 12px;
+  height: 12px;
+}
+
+.related-products-swiper .swiper-pagination-bullet-active {
+  opacity: 1;
+  background: #2563eb;
+}

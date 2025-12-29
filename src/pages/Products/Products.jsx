@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 import getProductById from "../../utils/apis/products/getProductById";
+import getRelatedProducts from "../../utils/apis/products/getRelatedProductsApi";
 import Header from "../../components/common/Header";
 import Footer from "../../components/common/Footer";
 import ProductSkeleton from "../../components/skeleton/ProductSkeleton/ProductSkeleton";
@@ -16,6 +22,16 @@ const Products = () => {
   const { isPending, error, data } = useQuery({
     queryKey: ["productById", id],
     queryFn: () => getProductById(id),
+  });
+
+  const {
+    isPending: isRelatedPending,
+    error: relatedError,
+    data: relatedData,
+  } = useQuery({
+    queryKey: ["relatedProducts", id],
+    queryFn: () => getRelatedProducts(id),
+    enabled: !!id && !!data?.data,
   });
 
   const addToCart = useCartStore((state) => state.addToCart);
@@ -267,6 +283,128 @@ const Products = () => {
                   </div>
                 </div>
               </div>
+            </div>
+          )}
+
+          {/* Related Products Carousel */}
+          {data?.data && (
+            <div className="max-w-7xl mx-auto mt-16">
+              <h2 className="text-3xl font-bold text-gray-900 mb-8">
+                Related Products
+              </h2>
+              {isRelatedPending && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                  {Array.from({ length: 4 }).map((_, i) => (
+                    <div
+                      key={i}
+                      className="bg-white rounded-2xl shadow-md animate-pulse"
+                    >
+                      <div className="aspect-square bg-gray-200 rounded-t-2xl" />
+                      <div className="p-5 space-y-3">
+                        <div className="h-4 bg-gray-200 rounded w-3/4" />
+                        <div className="h-6 bg-gray-200 rounded w-1/2" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+              {relatedError && (
+                <div className="text-center py-8 text-gray-500">
+                  Failed to load related products
+                </div>
+              )}
+              {relatedData?.data && relatedData.data.length > 0 && (
+                <Swiper
+                  modules={[Navigation, Pagination]}
+                  spaceBetween={24}
+                  slidesPerView={1}
+                  navigation
+                  pagination={{ clickable: true }}
+                  breakpoints={{
+                    640: {
+                      slidesPerView: 2,
+                    },
+                    768: {
+                      slidesPerView: 3,
+                    },
+                    1024: {
+                      slidesPerView: 4,
+                    },
+                  }}
+                  className="related-products-swiper"
+                >
+                  {relatedData.data.map((product) => (
+                    <SwiperSlide key={product?.id}>
+                      <Link
+                        to={`/products/${product?.id}`}
+                        className="group relative bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-blue-300 transform hover:-translate-y-2 block"
+                      >
+                        {/* Image Container */}
+                        <div className="relative overflow-hidden bg-gray-100 aspect-square">
+                          <img
+                            src={
+                              Array.isArray(product?.images)
+                                ? product.images[0]?.replace(
+                                    /^["[]+|["\]]/g,
+                                    ""
+                                  ) || product.images[0]
+                                : product?.images
+                            }
+                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                            alt={product?.title}
+                          />
+                          {/* Overlay on hover */}
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-black/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                          {/* Quick view badge */}
+                          <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <span className="bg-white/90 backdrop-blur-sm text-gray-800 text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg">
+                              View Details
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Content */}
+                        <div className="p-5">
+                          <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors duration-200">
+                            {product?.title}
+                          </h3>
+                          <div className="flex items-center justify-between mt-4">
+                            <span className="text-2xl font-bold text-blue-600">
+                              ${product?.price}
+                            </span>
+                            <div className="flex items-center gap-1 text-yellow-400">
+                              <svg
+                                className="w-5 h-5 fill-current"
+                                viewBox="0 0 20 20"
+                              >
+                                <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
+                              </svg>
+                              <span className="text-sm text-gray-600 ml-1">
+                                4.5
+                              </span>
+                            </div>
+                          </div>
+                          {/* Add to cart button on hover */}
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              addToCart(product, 1);
+                            }}
+                            className="w-full mt-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white py-2.5 rounded-lg font-medium opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 hover:from-blue-700 hover:to-blue-800 shadow-lg hover:shadow-xl"
+                          >
+                            Add to Cart
+                          </button>
+                        </div>
+                      </Link>
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+              )}
+              {relatedData?.data && relatedData.data.length === 0 && (
+                <div className="text-center py-8 text-gray-500">
+                  No related products found
+                </div>
+              )}
             </div>
           )}
         </div>
