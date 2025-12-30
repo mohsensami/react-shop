@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import { useNavigate, Link } from "react-router-dom";
 import useStore from "../../store";
 import getUserInfoWithTokenApi from "../../utils/apis/users/getUserInfoWithTokenApi";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import DashboardSkeleton from "../../components/skeleton/DashboardSkeleton";
 import ErrorOnFetchApi from "../../components/common/ErrorOnFetchApi";
 import { removeCookie } from "../../utils/helpers/cookie";
@@ -14,6 +14,7 @@ import BadgeIcon from "@mui/icons-material/Badge";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import CategoryIcon from "@mui/icons-material/Category";
 import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/Delete";
 import Header from "../../components/common/Header";
 import Avatar from "@mui/material/Avatar";
 import { Box, Card, CardContent } from "@mui/material";
@@ -22,11 +23,14 @@ import AddProductForm from "./AddProductForm";
 import AddCategoryForm from "./AddCategoryForm";
 import getProductsApi from "../../utils/apis/products/getProductsApi";
 import getCategoriesApi from "../../utils/apis/categories/getCategoriesApi";
+import deleteProductApi from "../../utils/apis/products/deleteProductApi";
+import deleteCategoryApi from "../../utils/apis/categories/deleteCategoryApi";
 import ProductGridSkeleton from "../../components/skeleton/ProductGridSkeleton";
 
 const Dashboard = () => {
   const { access_token, removeState } = useStore();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [activeView, setActiveView] = useState("profile"); // 'profile', 'products', or 'categories'
   const [showAddForm, setShowAddForm] = useState(false);
   const [showAddCategoryForm, setShowAddCategoryForm] = useState(false);
@@ -143,6 +147,62 @@ const Dashboard = () => {
   const handleAddCategoryClick = () => {
     setShowAddCategoryForm(true);
     setActiveView("categories");
+  };
+
+  // Mutation for deleting product
+  const deleteProductMutation = useMutation({
+    mutationFn: (id) => deleteProductApi(id),
+    onSuccess: (result, productId) => {
+      if (result?.status === 200 || result?.status === 204) {
+        toast.success("Product deleted successfully!");
+        // Invalidate products queries to refetch the list
+        queryClient.invalidateQueries({ queryKey: ["products"] });
+        // If current page becomes empty, go to previous page
+        if (products.length === 1 && currentPage > 1) {
+          setCurrentPage(currentPage - 1);
+        }
+      } else {
+        toast.error("Failed to delete product. Please try again.");
+      }
+    },
+    onError: (error) => {
+      toast.error("An error occurred while deleting the product.");
+      console.error("Error deleting product:", error);
+    },
+  });
+
+  // Mutation for deleting category
+  const deleteCategoryMutation = useMutation({
+    mutationFn: (id) => deleteCategoryApi(id),
+    onSuccess: (result, categoryId) => {
+      if (result?.status === 200 || result?.status === 204) {
+        toast.success("Category deleted successfully!");
+        // Invalidate categories queries to refetch the list
+        queryClient.invalidateQueries({ queryKey: ["categories"] });
+        // If current page becomes empty, go to previous page
+        if (categories.length === 1 && categoriesPage > 1) {
+          setCategoriesPage(categoriesPage - 1);
+        }
+      } else {
+        toast.error("Failed to delete category. Please try again.");
+      }
+    },
+    onError: (error) => {
+      toast.error("An error occurred while deleting the category.");
+      console.error("Error deleting category:", error);
+    },
+  });
+
+  const handleDeleteProduct = (productId) => {
+    if (window.confirm("Are you sure you want to delete this product?")) {
+      deleteProductMutation.mutate(productId);
+    }
+  };
+
+  const handleDeleteCategory = (categoryId) => {
+    if (window.confirm("Are you sure you want to delete this category?")) {
+      deleteCategoryMutation.mutate(categoryId);
+    }
   };
 
   return (
@@ -438,6 +498,9 @@ const Dashboard = () => {
                                       <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                                         Description
                                       </th>
+                                      <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                        Actions
+                                      </th>
                                     </tr>
                                   </thead>
                                   <tbody className="bg-white divide-y divide-gray-200">
@@ -495,6 +558,20 @@ const Dashboard = () => {
                                               {product?.description ||
                                                 "No description"}
                                             </div>
+                                          </td>
+                                          <td className="px-6 py-4 whitespace-nowrap">
+                                            <button
+                                              onClick={() =>
+                                                handleDeleteProduct(product?.id)
+                                              }
+                                              disabled={
+                                                deleteProductMutation.isPending
+                                              }
+                                              className="inline-flex items-center gap-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-all duration-200 font-semibold text-sm disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 active:scale-95"
+                                            >
+                                              <DeleteIcon fontSize="small" />
+                                              <span>Delete</span>
+                                            </button>
                                           </td>
                                         </tr>
                                       );
@@ -633,6 +710,9 @@ const Dashboard = () => {
                                       <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                                         Name
                                       </th>
+                                      <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                        Actions
+                                      </th>
                                     </tr>
                                   </thead>
                                   <tbody className="bg-white divide-y divide-gray-200">
@@ -661,6 +741,20 @@ const Dashboard = () => {
                                           <div className="text-sm font-semibold text-gray-900 max-w-xs">
                                             {category?.name || "N/A"}
                                           </div>
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap">
+                                          <button
+                                            onClick={() =>
+                                              handleDeleteCategory(category?.id)
+                                            }
+                                            disabled={
+                                              deleteCategoryMutation.isPending
+                                            }
+                                            className="inline-flex items-center gap-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-all duration-200 font-semibold text-sm disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 active:scale-95"
+                                          >
+                                            <DeleteIcon fontSize="small" />
+                                            <span>Delete</span>
+                                          </button>
                                         </td>
                                       </tr>
                                     ))}
