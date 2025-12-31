@@ -22,7 +22,7 @@ A modern e-commerce web application built with React and Vite, offering a fast a
 1. Clone the repository:
 
 ```bash
-git clone [your-repository-url]
+git clone [https://github.com/mohsensami/react-shop]
 ```
 
 .
