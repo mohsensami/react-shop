@@ -4,16 +4,19 @@ import { toast } from "react-toastify";
 import { Card, CardContent, Pagination } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import CategoryIcon from "@mui/icons-material/Category";
 import getCategoriesApi from "../../../utils/apis/categories/getCategoriesApi";
 import deleteCategoryApi from "../../../utils/apis/categories/deleteCategoryApi";
 import AddCategoryForm from "../AddCategoryForm";
+import EditCategoryForm from "../EditCategoryForm";
 import ProductGridSkeleton from "../../../components/skeleton/ProductGridSkeleton";
 import ErrorOnFetchApi from "../../../components/common/ErrorOnFetchApi";
 
 const CategoriesView = () => {
   const queryClient = useQueryClient();
   const [showAddCategoryForm, setShowAddCategoryForm] = useState(false);
+  const [editingCategoryId, setEditingCategoryId] = useState(null);
   const [categoriesPage, setCategoriesPage] = useState(1);
   const limit = 10;
 
@@ -27,7 +30,7 @@ const CategoriesView = () => {
     queryFn: () => {
       return getCategoriesApi(limit);
     },
-    enabled: !showAddCategoryForm,
+    enabled: !showAddCategoryForm && !editingCategoryId,
   });
 
   // Get categories array - handle both response structures
@@ -57,6 +60,16 @@ const CategoriesView = () => {
 
   const handleAddCategoryClick = () => {
     setShowAddCategoryForm(true);
+    setEditingCategoryId(null);
+  };
+
+  const handleEditCategoryClick = (categoryId) => {
+    setEditingCategoryId(categoryId);
+    setShowAddCategoryForm(false);
+  };
+
+  const handleCancelEdit = () => {
+    setEditingCategoryId(null);
   };
 
   // Mutation for deleting category
@@ -89,7 +102,8 @@ const CategoriesView = () => {
 
   const handleFormSuccess = () => {
     setShowAddCategoryForm(false);
-    setCategoriesPage(1); // Reset to first page after adding category
+    setEditingCategoryId(null);
+    setCategoriesPage(1); // Reset to first page after adding/editing category
   };
 
   return (
@@ -104,7 +118,7 @@ const CategoriesView = () => {
               </h2>
               <p className="text-gray-600 mt-1">Manage your categories</p>
             </div>
-            {!showAddCategoryForm && (
+            {!showAddCategoryForm && !editingCategoryId && (
               <button
                 onClick={handleAddCategoryClick}
                 className="flex items-center gap-2 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
@@ -117,8 +131,8 @@ const CategoriesView = () => {
         </CardContent>
       </Card>
 
-      {/* Add Category Form or Categories List */}
-      {showAddCategoryForm ? (
+      {/* Add Category Form */}
+      {showAddCategoryForm && (
         <div className="space-y-4">
           <button
             onClick={() => setShowAddCategoryForm(false)}
@@ -128,7 +142,27 @@ const CategoriesView = () => {
           </button>
           <AddCategoryForm onSuccess={handleFormSuccess} />
         </div>
-      ) : (
+      )}
+
+      {/* Edit Category Form */}
+      {editingCategoryId && (
+        <div className="space-y-4">
+          <button
+            onClick={handleCancelEdit}
+            className="flex items-center gap-2 text-gray-600 hover:text-gray-900 font-medium transition-colors duration-200"
+          >
+            <span>← Back to Categories</span>
+          </button>
+          <EditCategoryForm
+            categoryId={editingCategoryId}
+            onSuccess={handleFormSuccess}
+            onCancel={handleCancelEdit}
+          />
+        </div>
+      )}
+
+      {/* Categories List */}
+      {!showAddCategoryForm && !editingCategoryId && (
         <Card
           className="shadow-lg border-0 overflow-hidden"
           sx={{ borderRadius: "20px" }}
@@ -212,14 +246,25 @@ const CategoriesView = () => {
                             </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <button
-                              onClick={() => handleDeleteCategory(category?.id)}
-                              disabled={deleteCategoryMutation.isPending}
-                              className="inline-flex items-center gap-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-all duration-200 font-semibold text-sm disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 active:scale-95"
-                            >
-                              <DeleteIcon fontSize="small" />
-                              <span>Delete</span>
-                            </button>
+                            <div className="flex items-center gap-2">
+                              <button
+                                onClick={() =>
+                                  handleEditCategoryClick(category?.id)
+                                }
+                                className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-all duration-200 font-semibold text-sm transform hover:scale-105 active:scale-95"
+                              >
+                                <EditIcon fontSize="small" />
+                                <span>Edit</span>
+                              </button>
+                              <button
+                                onClick={() => handleDeleteCategory(category?.id)}
+                                disabled={deleteCategoryMutation.isPending}
+                                className="inline-flex items-center gap-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-all duration-200 font-semibold text-sm disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 active:scale-95"
+                              >
+                                <DeleteIcon fontSize="small" />
+                                <span>Delete</span>
+                              </button>
+                            </div>
                           </td>
                         </tr>
                       ))}
