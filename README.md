@@ -13,6 +13,8 @@ A modern e-commerce web application built with React and Vite, offering a fast a
 ## 🛠️ Technologies
 
 - React 19
+- Tailwindcss
+- Zustand
 - Vite
 - ESLint
 - SWC/Babel for Fast Refresh
