@@ -18,6 +18,7 @@ A modern e-commerce web application built with React and Vite, offering a fast a
 - Vite
 - ESLint
 - SWC/Babel for Fast Refresh
+- react-hook-form
 
 ## 📦 Installation
 
