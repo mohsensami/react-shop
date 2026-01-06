@@ -21,6 +21,7 @@ A modern e-commerce web application built with React and Vite, offering a fast a
 - react-hook-form
 - zod
 - axios
+- js-cookie
 
 ## 📦 Installation
 
