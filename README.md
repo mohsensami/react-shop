@@ -22,6 +22,7 @@ A modern e-commerce web application built with React and Vite, offering a fast a
 - zod
 - axios
 - js-cookie
+- swiper
 
 ## 📦 Installation
 

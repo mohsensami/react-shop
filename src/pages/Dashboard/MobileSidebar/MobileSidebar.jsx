@@ -46,7 +46,3 @@ const MobileSidebar = ({ activeView, onViewChange }) => {
 };
 
 export default MobileSidebar;
-
-
-
-
